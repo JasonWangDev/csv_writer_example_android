@@ -33,10 +33,23 @@ public class CsvWriter {
     /*
         檔案編碼格式
 
-        若包含中文建議使用 UTF-16 避免亂碼，若無中文哲建議使用 UTF-8，其他編碼類型建議參考官方文件
+        若包含中文內容建議使用 UTF-8，其他編碼類型建議參考官方文件
+
         https://developer.android.com/reference/java/nio/charset/Charset.html
       */
-    private static final String CSV_CHARSET = "UTF_16";
+    private static final String CSV_FILE_CHARSET = "UTF-8";
+
+    /*
+        檔案編碼標頭
+
+        採用 UFT-8 編碼文件，使用 Excel 軟體開啟時，內容會顯示異常出現亂碼。為解決此問題，需要在檔案
+        開頭以位元流寫入 BOM(Byte Order Mark) 標籤
+
+        http://jeiworld.blogspot.tw/2009/09/phpexcelutf-8csv.html
+
+        https://en.wikipedia.org/wiki/Byte_order_mark
+     */
+    private static final byte[] CSV_FILE_BOM = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
 
     /*
         單元格分隔符號
@@ -46,15 +59,18 @@ public class CsvWriter {
     private static final String CSV_SEPARATOR = ",";
 
 
-    public static void toCsvFile(List<String> header, List<List<String>> contents) {
+    public static void toCsvFile(List<String> title, List<List<String>> contents) {
         try
         {
             File file = createFile();
+
             FileOutputStream fos = new FileOutputStream(file);
-            OutputStreamWriter osw = new OutputStreamWriter(fos, CSV_CHARSET);
+            fos.write(CSV_FILE_BOM);
+
+            OutputStreamWriter osw = new OutputStreamWriter(fos, CSV_FILE_CHARSET);
             BufferedWriter bw = new BufferedWriter(osw);
 
-            writeOneLine(bw, header);
+            writeOneLine(bw, title);
             for(List<String> oneLine : contents)
                 writeOneLine(bw, oneLine);
 
@@ -82,15 +98,17 @@ public class CsvWriter {
             StringBuffer oneLine = new StringBuffer();
             for (String column : oneLineColumns)
             {
+                // 為程式撰寫方便需求，所以將原本應該放在單元格後面的分隔符號改為放在最前面
+                oneLine.append(CSV_SEPARATOR);
                 // 雙引號包覆的內容表示一個完整的單元格
                 oneLine.append("\"");
                 // 若單元格內包含雙引號符號需要轉換為兩個雙引號
-                oneLine.append(column.contains("\"") ? column.replaceAll("\"", "\"\"") : column);
+                oneLine.append(null != column ? column.replaceAll("\"", "\"\"") : "");
                 oneLine.append("\"");
-                oneLine.append(CSV_SEPARATOR);
             }
 
-            writer.write(oneLine.toString());
+            // 移除第一個分隔符號(多餘)
+            writer.write(oneLine.toString().replaceFirst(",", ""));
             writer.newLine();
         }
     }

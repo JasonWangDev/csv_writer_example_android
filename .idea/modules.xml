@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CSV.iml" filepath="$PROJECT_DIR$/CSV.iml" />
+      <module fileurl="file://C:\JasonWork\Respository\csv_writer_example_android\CSV.iml" filepath="C:\JasonWork\Respository\csv_writer_example_android\CSV.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\JasonWork\Respository\csv_writer_example_android\app\app.iml" filepath="C:\JasonWork\Respository\csv_writer_example_android\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/csv_writer_example_android.iml" filepath="$PROJECT_DIR$/csv_writer_example_android.iml" />
     </modules>
   </component>
 </project>
