@@ -15,7 +15,7 @@ public class ExampleActivity extends AppCompatActivity {
 
         List<String> header = new ArrayList<>();
         for (int i = 0 ; i < 10 ; i++)
-            header.add("欄位 測試特殊符號,\" End Test " + (i + 1));
+            header.add("欄位 測試換行符號\r\n測試特殊符號,\" End Test " + (i + 1));
 
         List<List<String>> contents = new ArrayList<>();
         for(int i = 0 ; i < 20 ; i++)
